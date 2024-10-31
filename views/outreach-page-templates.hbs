@@ -1,0 +1,123 @@
+<script type="x-handlebars-template" id="opportunities-list-item-template">
+	<li class="report-list-item">
+		<div class="report-header" data-id="{{ report_id }}">
+			<h4>
+				<small>keyword: {{ keyword }}</small>
+			</h4>
+		</div>
+		<ul class="report-opportunities-list">
+			{{#if_eq opportunities.length 0}}
+				<li><p class="no-results">(No results found)</p></li>
+			{{else}}
+				{{#each opportunities}}
+					<li class="outreach-opportunity {{#if_eq email_sent 1}}complete{{/if_eq}}" data-outreach-type="{{ type }}" data-id="{{ id }}">
+						
+						{{#if_eq this.type "broken-links"}}
+							<div>{{ data.source.domain }}</div>
+							<p>↳ {{ data.destination.domain }}</p>
+						{{/if_eq}}
+
+						{{#if_eq this.type "contextual-content"}}
+							<div>{{#if data.backlink.title}}{{{ data.backlink.title }}}{{else}}{{ data.backlink.url }}{{/if}}</div>
+						{{/if_eq}}
+
+						{{#if_eq this.type "relevant-contacts"}}
+							<div class="relevant-contact">
+								<img src="{{ data.user.image_url }}" alt="" class="avatar" onerror="this.src=''">
+								<div class="details">
+									{{ data.user.name }}
+									<br>
+									<span class="followers">followers: {{#if data.user.followers }}{{data.user.followers}}{{else}}(na){{/if}}</span>
+								</div>
+							</div>
+						{{/if_eq}}
+					</li>
+				{{/each}}
+			{{/if_eq}}
+		</ul>
+	</li>
+</script>
+
+<script type="x-handlebars-template" id="opportunity-content-template">
+	<div class="outreach-details">
+		<div class="actions">
+			<button class="delete btn btn-xs" type="button">delete
+				<div class="progress hidden">
+	                <div class="indeterminate"></div>
+	            </div>
+			</button>
+			<button class="close-opportunity btn btn-xs" type="button">close</button>
+		</div>
+		<div class="outreach-li-header"></div>
+		<div class="content">
+			
+			<span class="labels">Potential emails:</span>
+			<div class="email-results">
+			{{#if_eq data.potential_emails.length 0}}
+				<p>No emails found</p>
+			{{else}}
+				{{#if data.potential_emails.length}}
+					<ul>
+					{{#each data.potential_emails }}
+						<li>{{ this.email }}<button class="use-email btn btn-xs" data-email="{{ this.email }}">use</button></li>
+					{{/each}}
+					</ul>
+				{{else}}
+					<button class="loading btn btn-xs" type="button">Looking for emails...
+						<div class="progress">
+			                <div class="indeterminate"></div>
+			            </div>
+		            </button>
+				{{/if}}
+			{{/if_eq}}
+			</div>
+
+			{{#if_eq this.type "broken-links"}}
+				<p class="source">
+					<span class="labels">Source:</span><a target="_blank" href="{{ data.source.url }}" title="{{ data.source.url }}">{{ data.source.domain }}</a>
+					<span class="labels">Source Metrics:</span>
+					<span class="metrics">
+						DA: {{ data.source.metrics.da }}<br/>
+						PA: {{ data.source.metrics.pa }}
+					</span>
+				</p>
+				<p class="destination">
+					<span class="labels">Destination:</span><a target="_blank" href="{{ data.destination.url }}" title="{{ data.destination.url }}">{{ data.destination.domain }}</a>			
+				</p>
+			{{/if_eq}}
+
+			{{#if_eq this.type "contextual-content"}}
+				<span class="labels">Backlink:</span><a target="_blank" href="{{ data.backlink.url }}">{{{ data.backlink.title }}}</a> 
+				<span class="labels">Original resource:</span> <a target="_blank" href="{{ data.source.url }}">{{{ data.source.title }}}</a>
+				<span class="labels">Original resource shares:</span>
+				<ul class="list-unstyled">
+					{{#each data.source.shares}}
+						<li>
+							<span>{{@key}}</span>: <span>{{this}}</span>
+						</li>
+					{{/each}}
+				</ul>
+			{{/if_eq}}
+
+			{{#if_eq this.type "relevant-contacts"}}
+				{{#if data.user.screen_name}}
+					<div class="twitter-account">
+						<span class="labels">Username:</span><a target="_blank" href="https://twitter.com/{{ data.user.screen_name }}">{{ data.user.screen_name }}</a>
+					</div>
+				{{/if}}
+				{{#if data.user.url}}
+					<div class="user-url">
+						<span class="labels">Website:</span><a target="_blank" href="{{ data.user.url }}">{{ data.user.domain }}</a>
+					</div>
+				{{/if}}
+				{{#if data.user.description}}
+					<div class="twitter-description">
+						<span class="labels">Description:</span>
+						<p>{{ data.user.description }}</p>
+					</div>
+				{{/if}}
+			{{/if_eq}}
+
+		</div>
+	</div>
+</script>

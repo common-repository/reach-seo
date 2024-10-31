@@ -1,0 +1,6 @@
+{
+    "require": {
+        "swiftmailer/swiftmailer": "^5.4",
+        "tgmpa/tgm-plugin-activation": "~2.5"
+    }
+}
